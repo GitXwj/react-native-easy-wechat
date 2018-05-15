@@ -39,7 +39,9 @@ function wrapRegisterApp(nativeFunc) {
     });
   };
 }
-
+export function shareToMiniProgram(data) {
+    WeChat.shareToMiniProgram(data, () => {});
+}
 function wrapApi(nativeFunc) {
   if (!nativeFunc) {
     return undefined;
