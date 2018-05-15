@@ -26,25 +26,24 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.tencent.mm.sdk.modelbase.BaseReq;
-import com.tencent.mm.sdk.modelbase.BaseResp;
-import com.tencent.mm.sdk.modelmsg.SendAuth;
-import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
-import com.tencent.mm.sdk.modelmsg.WXFileObject;
-import com.tencent.mm.sdk.modelmsg.WXImageObject;
-import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
-import com.tencent.mm.sdk.modelmsg.WXMusicObject;
-import com.tencent.mm.sdk.modelmsg.WXTextObject;
-import com.tencent.mm.sdk.modelmsg.WXVideoObject;
-import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
-import com.tencent.mm.sdk.modelpay.PayReq;
-import com.tencent.mm.sdk.modelpay.PayResp;
-import com.tencent.mm.sdk.openapi.IWXAPI;
-import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
-import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.tencent.mm.opensdk.modelbase.BaseReq;
+import com.tencent.mm.opensdk.modelbase.BaseResp;
+import com.tencent.mm.opensdk.modelmsg.SendAuth;
+import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.opensdk.modelmsg.WXFileObject;
+import com.tencent.mm.opensdk.modelmsg.WXImageObject;
+import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.opensdk.modelmsg.WXMiniProgramObject;
+import com.tencent.mm.opensdk.modelmsg.WXMusicObject;
+import com.tencent.mm.opensdk.modelmsg.WXTextObject;
+import com.tencent.mm.opensdk.modelmsg.WXVideoObject;
+import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
+import com.tencent.mm.opensdk.modelpay.PayReq;
+import com.tencent.mm.opensdk.modelpay.PayResp;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
-import java.io.File;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -172,14 +171,47 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
         }
         _share(SendMessageToWX.Req.WXSceneSession, data, callback);
     }
-    
+
     @ReactMethod
-    public void shareToFavorite(ReadableMap data, Callback callback) {
+    public void shareToMiniProgram(final ReadableMap data, final Callback callback) {
         if (api == null) {
             callback.invoke(NOT_REGISTERED);
             return;
         }
-        _share(SendMessageToWX.Req.WXSceneFavorite, data, callback);
+        Uri uri = null;
+        if (data.hasKey("hdImageData")) {
+            String imageUrl = data.getString("hdImageData");
+
+            try {
+                uri = Uri.parse(imageUrl);
+                // Verify scheme is set, so that relative uri (used by static resources) are not handled.
+                if (uri.getScheme() == null) {
+                    uri = getResourceDrawableUri(getReactApplicationContext(), imageUrl);
+                }
+            } catch (Exception e) {
+                // ignore malformed uri, then attempt to extract resource ID.
+            }
+        }
+        this._getImage(uri, new ResizeOptions(500, 400), new ImageCallback() {
+            @Override
+            public void invoke(@Nullable Bitmap bitmap) {
+                WXMiniProgramObject miniProgramObj = new WXMiniProgramObject();
+                miniProgramObj.webpageUrl = data.getString("webpageUrl"); // 兼容低版本的网页链接
+                miniProgramObj.miniprogramType = WXMiniProgramObject.MINIPTOGRAM_TYPE_RELEASE;// 正式版:0，测试版:1，体验版:2
+                miniProgramObj.userName = data.getString("userName");     // 小程序原始id
+                miniProgramObj.path = data.getString("path");     //小程序页面路径
+                WXMediaMessage msg = new WXMediaMessage(miniProgramObj);
+                msg.title = data.getString("title");                    // 小程序消息title
+                msg.description = data.getString("description");               // 小程序消息desc
+                msg.setThumbImage(bitmap);                      // 小程序消息封面图片，小于128k
+
+                SendMessageToWX.Req req = new SendMessageToWX.Req();
+                req.transaction = UUID.randomUUID().toString();
+                req.message = msg;
+                req.scene = SendMessageToWX.Req.WXSceneSession;  // 目前支持会话
+                callback.invoke(null, api.sendReq(req));
+            }
+        });
     }
 
     @ReactMethod

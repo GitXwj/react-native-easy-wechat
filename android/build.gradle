@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
   compileSdkVersion 23
-  buildToolsVersion "23.0.1"
+  buildToolsVersion "25.0.1"
   defaultConfig {
     minSdkVersion 16
     targetSdkVersion 22
@@ -23,5 +23,5 @@ allprojects {
 
 dependencies {
   compile 'com.facebook.react:react-native:+'
-  compile files('libs/libammsdk.jar')
+  compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
 }
