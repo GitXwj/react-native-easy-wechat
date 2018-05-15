@@ -38,18 +38,18 @@ class Example extends React.Component {
       console.error(e);
     }
     console.log(WeChat);
-    // console.log('getApiVersion', typeof WeChat.getApiVersion);
-    // console.log('getWXAppInstallUrl', typeof WeChat.getWXAppInstallUrl);
-    // console.log('sendRequest', typeof WeChat.sendRequest);
-    // console.log('registerApp', typeof WeChat.registerApp);
-    // console.log('sendErrorCommonResponse', typeof WeChat.sendErrorCommonResponse);
-    // console.log('sendErrorUserCancelResponse', typeof WeChat.sendErrorUserCancelResponse);
-    // console.log('sendAuthRequest', typeof WeChat.sendAuthRequest);
-    // console.log('getWXAppInstallUrl', typeof WeChat.getWXAppInstallUrl);
-    // console.log('openWXApp', typeof WeChat.openWXApp);
-    // console.log('registerAppWithDescription', typeof WeChat.registerAppWithDescription);
-    // console.log('isWXAppSupportApi', typeof WeChat.isWXAppSupportApi);
-    // console.log('isWXAppInstalled', typeof WeChat.isWXAppInstalled);
+    console.log('getApiVersion', typeof WeChat.getApiVersion);
+    console.log('getWXAppInstallUrl', typeof WeChat.getWXAppInstallUrl);
+    console.log('sendRequest', typeof WeChat.sendRequest);
+    console.log('registerApp', typeof WeChat.registerApp);
+    console.log('sendErrorCommonResponse', typeof WeChat.sendErrorCommonResponse);
+    console.log('sendErrorUserCancelResponse', typeof WeChat.sendErrorUserCancelResponse);
+    console.log('sendAuthRequest', typeof WeChat.sendAuthRequest);
+    console.log('getWXAppInstallUrl', typeof WeChat.getWXAppInstallUrl);
+    console.log('openWXApp', typeof WeChat.openWXApp);
+    console.log('registerAppWithDescription', typeof WeChat.registerAppWithDescription);
+    console.log('isWXAppSupportApi', typeof WeChat.isWXAppSupportApi);
+    console.log('isWXAppInstalled', typeof WeChat.isWXAppInstalled);
   }
   render() {
     return (
