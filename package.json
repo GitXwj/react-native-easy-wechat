@@ -1,7 +1,7 @@
 {
   "name": "react-native-easy-wechat",
   "version": "1.0.1",
-  "description": "",
+  "description": "react-native library for wechat app",
   "main": "index.js",
   "scripts": {
     "test": "echo 1"
@@ -14,7 +14,7 @@
     "wechat"
   ],
   "dependencies": {
-    "Example": "Example"
+    "events": "1.0.2"
   },
   "peerDependencies": {
     "react-native": ">=0.40"
