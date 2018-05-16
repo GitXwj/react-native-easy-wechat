@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/weflex/react-native-wechat.git"
+    "url": "git+ssh://git@github.com/GitXwj/react-native-wechat.git"
   },
   "keywords": [
     "wechat",
@@ -23,20 +23,20 @@
   "peerDependencies": {
     "react-native": ">=0.40"
   },
-  "author": "Yorkie Liu <yorkiefixer@gmail.com>",
+  "author": "",
   "contributors": [
     {
-      "name": "Yorkie Liu",
-      "email": "yorkiefixer@gmail.com"
+      "name": "",
+      "email": ""
     },
     {
-      "name": "Deng Yun",
-      "email": "tdzl2003@gmail.com"
+      "name": "",
+      "email": ""
     }
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/weflex/react-native-wechat/issues"
+    "url": "https://github.com/GitXwj/react-native-wechat/issues"
   },
-  "homepage": "https://github.com/weflex/react-native-wechat#readme"
+  "homepage": "https://github.com/GitXwj/react-native-wechat#readme"
 }
