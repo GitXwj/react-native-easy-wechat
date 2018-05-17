@@ -361,9 +361,13 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
 
 -(void) onReq:(BaseReq*)req
 {
-    if ([req isKindOfClass:[LaunchFromWXReq class]]) {
-        LaunchFromWXReq *launchReq = (LaunchFromWXReq *)req;
-    }
+     if ([req isKindOfClass:[GetMessageFromWXReq class]]) {
+
+        } else if ([req isKindOfClass:[ShowMessageFromWXReq class]]) {
+
+        } else if ([req isKindOfClass:[LaunchFromWXReq class]]) {
+             LaunchFromWXReq *launchReq = (LaunchFromWXReq *)req;
+        }
 }
 
 -(void) onResp:(BaseResp*)resp
@@ -403,7 +407,15 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
         body[@"returnKey"] =r.returnKey;
         body[@"type"] = @"PayReq.Resp";
         [self.bridge.eventDispatcher sendDeviceEventWithName:RCTWXEventName body:body];
-    }
+    }else if ([resp isKindOfClass:[WXLaunchMiniProgramResp class]]) {
+             PayResp *r = (PayResp *)resp;
+             NSMutableDictionary *body = @{@"errCode":@(r.errCode)}.mutableCopy;
+             body[@"errStr"] = r.errStr;
+             body[@"type"] = @(r.type);
+             body[@"returnKey"] =r.returnKey;
+             body[@"type"] = @"MiniProgram.Resp";
+             [self.bridge.eventDispatcher sendDeviceEventWithName:RCTWXEventName body:body];
+         }
 }
 
 @end
