@@ -28,6 +28,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
+import com.tencent.mm.opensdk.modelbiz.WXLaunchMiniProgram;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXFileObject;
@@ -197,7 +198,7 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
             public void invoke(@Nullable Bitmap bitmap) {
                 WXMiniProgramObject miniProgramObj = new WXMiniProgramObject();
                 miniProgramObj.webpageUrl = data.getString("webpageUrl"); // 兼容低版本的网页链接
-                miniProgramObj.miniprogramType = WXMiniProgramObject.MINIPTOGRAM_TYPE_RELEASE;// 正式版:0，测试版:1，体验版:2
+                miniProgramObj.miniprogramType = data.getInt("WXMiniProgramType");// 正式版:0，测试版:1，体验版:2
                 miniProgramObj.userName = data.getString("userName");     // 小程序原始id
                 miniProgramObj.path = data.getString("path");     //小程序页面路径
                 WXMediaMessage msg = new WXMediaMessage(miniProgramObj);
@@ -213,7 +214,20 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
             }
         });
     }
+    @ReactMethod
+    public void openMiniProgram(final ReadableMap data, final Callback callback) {
+        if (api == null) {
+            callback.invoke(NOT_REGISTERED);
+            return;
+        }
+        IWXAPI api = WXAPIFactory.createWXAPI(getReactApplicationContext(), appId);
 
+        WXLaunchMiniProgram.Req req = new WXLaunchMiniProgram.Req();
+        req.userName = data.getString("userName"); // 填小程序原始id
+        req.path = data.getString("path");                  //拉起小程序页面的可带参路径，不填默认拉起小程序首页
+        req.miniprogramType = data.getInt("WXMiniProgramType");// 可选打开 开发版，体验版和正式版
+        callback.invoke(null, api.sendReq(req));
+    }
     @ReactMethod
     public void pay(ReadableMap data, Callback callback){
         PayReq payReq = new PayReq();

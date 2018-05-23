@@ -1,13 +1,13 @@
 <img height="200" src="./weixin.png?raw=true">
 
-# React-Native-Wechat
+# React-Native-easy-Wechat
 
 [React Native] bridging library that integrates WeChat SDKs:
 
-- [x] iOS SDK 1.7.2
-- [x] Android SDK 221
+- [x] iOS SDK @1.8.2
+- [x] Android SDK @lastVersion
 
-And [react-native-wechat] has the following tracking data in open source world:
+And [react-native-easy-wechat] has the following tracking data in open source world:
 
 | NPM | Dependency | Downloads | Build |
 |-----|------------|-----------|-------|
@@ -29,7 +29,7 @@ And [react-native-wechat] has the following tracking data in open source world:
 
 ## API Documentation
 
-[react-native-wechat] exposes the promise-based, therefore you could use `Promise`
+[react-native-easy-wechat] exposes the promise-based, therefore you could use `Promise`
 or `async/await` to manage your dataflow.
 
 #### registerApp(appid)
@@ -40,7 +40,7 @@ or `async/await` to manage your dataflow.
 This method should be called once globally.
 
 ```js
-import * as WeChat from 'react-native-wechat';
+import * as WeChat from 'react-native-easy-wechat';
 
 WeChat.registerApp('appid');
 ```
@@ -298,6 +298,64 @@ Similar to `shareToTimeline` but send message to a friend or chat group.
   - `sign` {String} 商家根据微信开放平台文档对数据做的签名
 - returns {Object}
 
+#### shareToMiniProgram(data)
+
+  - `webpageUrl` {String} 兼容低版本的网页链接
+  - `miniprogramType` {String} 小程序的类型，正式版:0，测试版:1，体验版:2
+  - `userName` {String}  小程序原始id
+  - `path` {String} 小程序页面路径
+  - `title` {String}  小程序消息desc
+  - `thumbData` {String} 小程序消息封面图片，小于128k
+  
+```js
+
+    const isWXAppInstalled = await wechat.isWXAppInstalled();
+    const description = `${this.state.inviteCompany}的${global.User.name}给您发了一封邀请函，请查收。`;
+    let thumbImage = resolveAssetSource(this.state.templateType.shareIcon).uri;
+    const hdImageData = resolveAssetSource(this.state.templateType.miniProgramCard).uri;
+    const WXMiniProgramType = wechat.WXMiniProgramType.WXMiniProgramTypeTest;
+    if (isWXAppInstalled) {
+      const result = await wechat.shareToMiniProgram({
+        title: description,
+        WXMiniProgramType,
+        description,
+        thumbImage,
+        webpageUrl: `${Api.INVITATION_URL}${cardId}`,
+        userName: WXMiniProgramName,
+        path: `${WXMiniProgramPath}${cardId}`,
+        hdImageData,
+      });
+      console.warn(result);
+    } else {
+      Toast.show('您的手机还没有安装微信，请先安装微信客户端');
+      console.warn(isWXAppInstalled, '没有安装微信');
+    }
+
+```
+
+#### openWXMiniProgram(data)
+
+  - `miniprogramType` {String} 小程序的类型，正式版:0，测试版:1，体验版:2
+  - `userName` {String}  小程序原始id
+  - `path` {String} 小程序页面路径
+  
+  ```js
+  
+  const isWXAppInstalled = await wechat.isWXAppInstalled();
+  const WXMiniProgramType = wechat.WXMiniProgramType.WXMiniProgramTypeTest;
+     if (isWXAppInstalled) {
+       wechat.openMiniProgram({
+         WXMiniProgramType,
+         userName: WXMiniProgramName,
+         path: `${WXMiniProgramPath}${cardId}`,
+       }).catch(e => console.warn(e));
+     } else {
+       Toast.show('您的手机还没有安装微信，请先安装微信客户端');
+       console.warn(isWXAppInstalled, '没有安装微信');
+     }
+  
+  ```
+
 Sends request for proceeding payment, then returns an object:
 
 | name    | type   | description                         |
@@ -312,10 +370,6 @@ $ npm install react-native-wechat --save
 ```
 
 ## Community
-
-#### IRC
-
-<a href="http://qm.qq.com/cgi-bin/qm/qr?k=cg3irEFCGxjkm2YJCt5V9OeJA1pNo5Ui"><img width="200" src="./qrcode_qq.jpg"></a>
 
 #### Tutorials
 

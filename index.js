@@ -9,6 +9,7 @@ const { WeChat } = NativeModules;
 // Event emitter to dispatch request and response from WeChat.
 const emitter = new EventEmitter();
 
+
 DeviceEventEmitter.addListener('WeChat_Resp', resp => {
     emitter.emit(resp.type, resp);
 });
@@ -41,18 +42,6 @@ function wrapRegisterApp(nativeFunc) {
 }
 
 
-export function shareToMiniProgram(data) {
-    return new Promise((resolve, reject) => {
-        nativeShareToMiniProgram(data);
-        emitter.once('SendMessageToWX.Resp', resp => {
-            if (resp.errCode === 0) {
-                resolve(resp);
-            } else {
-                reject(new WechatError(resp));
-            }
-        });
-    });
-}
 
 function wrapApi(nativeFunc) {
     if (!nativeFunc) {
@@ -77,6 +66,20 @@ function wrapApi(nativeFunc) {
             ]);
         });
     };
+}
+
+/**
+ *
+ * @type {{WXMiniProgramTypeRelease: number, WXMiniProgramTypeTest: number, WXMiniProgramTypePreview: number}}
+ *
+ * 0 >> 正式版
+ * 1 >> 开发版
+ * 2 >> 体验版
+ */
+export const WXMiniProgramType  = {
+    WXMiniProgramTypeRelease :0,
+    WXMiniProgramTypeTest : 1,
+    WXMiniProgramTypePreview : 2,
 }
 
 /**
@@ -160,6 +163,7 @@ const nativeShareToSession = wrapApi(WeChat.shareToSession);
 const nativeShareToFavorite = wrapApi(WeChat.shareToFavorite);
 const nativeSendAuthRequest = wrapApi(WeChat.sendAuthRequest);
 const nativeShareToMiniProgram = wrapApi(WeChat.shareToMiniProgram);
+const nativeOpenMiniProgram = wrapApi(WeChat.openMiniProgram);
 
 /**
  * @method sendAuthRequest
@@ -178,7 +182,36 @@ export function sendAuthRequest(scopes, state) {
         });
     });
 }
+/**
+ *
+ * @param data
+ * @returns {Promise}
+ */
+export function shareToMiniProgram(data) {
+    return new Promise((resolve, reject) => {
+        nativeShareToMiniProgram(data);
+        emitter.once('SendMessageToWX.Resp', resp => {
+            if (resp.errCode === 0) {
+                resolve(resp);
+            } else {
+                reject(new WechatError(resp));
+            }
+        });
+    });
+}
 
+export function openMiniProgram(data) {
+    return new Promise((resolve, reject) => {
+        nativeOpenMiniProgram(data);
+        emitter.once('SendMessageToWX.Resp', resp => {
+            if (resp.errCode === 0) {
+                resolve(resp);
+            } else {
+                reject(new WechatError(resp));
+            }
+        });
+    });
+}
 /**
  * Share something to timeline/moments/朋友圈
  * @method shareToTimeline
