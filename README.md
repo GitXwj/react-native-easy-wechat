@@ -123,7 +123,7 @@ Share a `ShareMetadata` message to timeline(朋友圈) and returns:
 These example code need 'react-native-chat' and 'react-native-fs' plugin.
 
 ```js
-import * as WeChat from 'react-native-wechat';
+import * as WeChat from 'react-native-easy-wechat';
 import fs from 'react-native-fs';
 let resolveAssetSource = require('resolveAssetSource');
 
@@ -369,7 +369,6 @@ Sends request for proceeding payment, then returns an object:
 $ npm install react-native-wechat --save
 ```
 
-## Community
 
 #### Tutorials
 

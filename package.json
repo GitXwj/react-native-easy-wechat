@@ -11,7 +11,9 @@
     "url": "git+ssh://git@github.com/GitXwj/react-native-wechat.git"
   },
   "keywords": [
-    "wechat"
+    "wechat",
+    "react-native-wechat",
+    "react-native-easy-wechat"
   ],
   "dependencies": {
     "events": "1.0.2"
