@@ -19,10 +19,13 @@
 
 @implementation RCTWeChat
 
-@synthesize bridge = _bridge;
 
 RCT_EXPORT_MODULE()
-
+@synthesize bridge = _bridge;
++ (BOOL)requiresMainQueueSetup
+{
+    return YES;
+}
 - (instancetype)init
 {
     self = [super init];
@@ -41,7 +44,7 @@ RCT_EXPORT_MODULE()
 {
     NSString * aURLString =  [aNotification userInfo][@"url"];
     NSURL * aURL = [NSURL URLWithString:aURLString];
-    
+
     if ([WXApi handleOpenURL:aURL delegate:self])
     {
         return YES;
